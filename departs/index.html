@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ordre des départs</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; background: #f4efe6; color: #222;
+         margin: 0; padding: 48px 24px; text-align: center; }
+  h1 { font-size: 24px; margin: 0 0 12px; }
+  #ordre { font-size: 17px; color: #666; margin: 0 0 32px; font-variant-numeric: tabular-nums; }
+  a.bouton { display: inline-block; background: #0a84ff; color: #fff; text-decoration: none;
+             font-size: 19px; font-weight: 600; padding: 14px 28px; border-radius: 14px; }
+  p.aide { font-size: 14px; color: #888; margin-top: 32px; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1c1c1e; color: #eee; }
+    #ordre, p.aide { color: #aaa; }
+  }
+</style>
+</head>
+<body>
+<h1>Ordre des départs</h1>
+<p id="ordre"></p>
+<a class="bouton" id="ouvrir" href="#">Ouvrir dans myPlanning</a>
+<p class="aide">Si l'app ne s'ouvre pas toute seule, touche le bouton.<br>myPlanning doit être installée sur cet appareil.</p>
+<script>
+  // Lien reçu : …/departs/?ordre=1,5,3,2;4,1,5,3;…  → myplaning://departs?ordre=…
+  var ordre = new URLSearchParams(location.search).get("ordre") || "";
+  var bouton = document.getElementById("ouvrir");
+  if (/^[0-9A-Za-z,; ]+$/.test(ordre)) {
+    document.getElementById("ordre").textContent = ordre.split(";").join(" ; ").split(",").join(", ");
+    var lien = "myplaning://departs?ordre=" + encodeURIComponent(ordre);
+    bouton.href = lien;
+    location.href = lien;
+  } else {
+    document.getElementById("ordre").textContent = "Lien incomplet : aucun ordre des départs.";
+    bouton.style.display = "none";
+  }
+</script>
+</body>
+</html>
