@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Période rouge</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; background: #f4efe6; color: #222;
+         margin: 0; padding: 48px 24px; text-align: center; }
+  h1 { font-size: 24px; margin: 0 0 12px; }
+  #dates { font-size: 17px; color: #666; margin: 0 0 32px; }
+  a.bouton { display: inline-block; background: #0a84ff; color: #fff; text-decoration: none;
+             font-size: 19px; font-weight: 600; padding: 14px 28px; border-radius: 14px; }
+  p.aide { font-size: 14px; color: #888; margin-top: 32px; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1c1c1e; color: #eee; }
+    #dates, p.aide { color: #aaa; }
+  }
+</style>
+</head>
+<body>
+<h1>Période rouge</h1>
+<p id="dates"></p>
+<a class="bouton" id="ouvrir" href="#">Ouvrir dans myPlanning</a>
+<p class="aide">Si l'app ne s'ouvre pas toute seule, touche le bouton.<br>myPlanning doit être installée sur cet appareil.</p>
+<script>
+  // Lien reçu : …/periode/?du=2026-12-01&au=2026-12-10&options=22-20,16-22
+  var q = new URLSearchParams(location.search);
+  var du = q.get("du") || "", au = q.get("au") || "", options = q.get("options") || "";
+  var date = /^\d{4}-\d{2}-\d{2}$/;
+  var bouton = document.getElementById("ouvrir");
+  var texte = document.getElementById("dates");
+  if (date.test(du) && date.test(au) && /^[0-9,-]*$/.test(options)) {
+    var jour = function (d) { return d.split("-").reverse().join("/"); };
+    texte.textContent = "Du " + jour(du) + " au " + jour(au);
+    var lien = "myplaning://periode?du=" + du + "&au=" + au + "&options=" + encodeURIComponent(options);
+    bouton.href = lien;
+    location.href = lien;
+  } else {
+    texte.textContent = "Lien incomplet : aucune période rouge.";
+    bouton.style.display = "none";
+  }
+</script>
+</body>
+</html>
